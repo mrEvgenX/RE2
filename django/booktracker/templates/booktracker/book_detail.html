@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}All books{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>{{ object.title }}</h2>
+            <p>Author: {{ object.author }}</p>
+            <p>Publisher: {{ object.publisher }}</p>
+            <p>Year: {{ object.year }}</p>
+            <h3>Description</h3>
+            <p>{{ object.description }}</p>
+
+        </div>
+    </div>
+{% endblock %}
