@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}All books{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Add book to shelf</h3>
+            <p>Something went wrong.</p>
+            <form method="POST">
+                {{ form | crispy }}
+            </form>
+            {{ form.errors }}
+            <a href="{% url 'booktracker:book_detail' pk=view.kwargs.pk %}">Return to book</a>
+        </div>
+    </div>
+{% endblock %}

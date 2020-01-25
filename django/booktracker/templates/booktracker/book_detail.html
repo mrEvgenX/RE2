@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}All books{% endblock %}
 
 {% block body %}
@@ -11,7 +13,13 @@
             <p>Year: {{ object.year }}</p>
             <h3>Description</h3>
             <p>{{ object.description }}</p>
-
+            {% if form %}
+            <form method="POST" action="{% url 'booktracker:add2shelf' pk=object.id %}">
+                {{ form | crispy }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Add to shelf</button>
+            </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
