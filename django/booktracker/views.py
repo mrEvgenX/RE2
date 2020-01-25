@@ -1,10 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from booktracker.models import Book
-from booktracker.forms import Add2ShelfForm
+from django.shortcuts import get_object_or_404
+from booktracker.models import Book, ShelvedBook
+from booktracker.forms import ShelvingForm
 
 
 class ListAllBooks(ListView):
@@ -16,19 +17,18 @@ class BookDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated and not self.book_already_shelved():
-            ctx.update({
-                'form': Add2ShelfForm(initial={'book': self.object.id, 'user': self.request.user.id}),
-            })
+        if self.request.user.is_authenticated:
+            form  = ShelvingForm(initial={'book': self.object.id, 'user': self.request.user.id})
+            if not self.object.shelved_by_user(self.request.user):
+                ctx.update({'add_form': form})
+            else:
+                ctx.update({'remove_form': form})
         return ctx
 
-    def book_already_shelved(self):
-        return self.request.user.book_set.filter(pk=self.object.id).exists()
 
-
-class Add2Shelf(LoginRequiredMixin, CreateView):
-    form_class = Add2ShelfForm
-    template_name = 'booktracker/add2shelf.html'
+class ShelveView(LoginRequiredMixin, CreateView):
+    form_class = ShelvingForm
+    template_name = 'booktracker/shelve.html'
 
     def get_initial(self):
         return {
@@ -45,6 +45,18 @@ class Add2Shelf(LoginRequiredMixin, CreateView):
 
     def get_book(self):
         return Book.objects.get(pk=self.kwargs['pk'])
+
+
+class DeshelveView(LoginRequiredMixin, DeleteView):
+    model = ShelvedBook
+    template_name = 'booktracker/deshelve.html'
+
+    def get_success_url(self):
+        return reverse('booktracker:book_detail', kwargs={'pk': self.kwargs['pk']})
+
+    def get_object(self, queryset=None):
+        b = get_object_or_404(Book, pk=self.kwargs['pk'])
+        return get_object_or_404(b.shelvedbook_set, user__id=self.request.user.id)
 
 
 class MyShelf(LoginRequiredMixin, ListView):

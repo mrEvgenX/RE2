@@ -27,6 +27,9 @@ class Book(models.Model):
     def __str__(self):
         return '{} "{}"'.format(self.author, self.title)
 
+    def shelved_by_user(self, user):
+        return self.shelvedbook_set.filter(user__id=user.id).exists()
+
 
 class ShelvedBook(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)

@@ -13,11 +13,17 @@
             <p>Year: {{ object.year }}</p>
             <h3>Description</h3>
             <p>{{ object.description }}</p>
-            {% if form %}
-            <form method="POST" action="{% url 'booktracker:add2shelf' pk=object.id %}">
-                {{ form | crispy }}
+            {% if add_form %}
+            <form method="POST" action="{% url 'booktracker:shelve' pk=object.id %}">
+                {{ add_form | crispy }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary">Add to shelf</button>
+            </form>
+            {% elif remove_form %}
+            <form method="POST" action="{% url 'booktracker:deshelve' pk=object.id %}">
+                {{ remove_form | crispy }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove from shelf</button>
             </form>
             {% endif %}
         </div>

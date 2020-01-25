@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from booktracker.models import ShelvedBook, Book
 
 
-class Add2ShelfForm(forms.ModelForm):
+class ShelvingForm(forms.ModelForm):
     book = forms.ModelChoiceField(
         widget=forms.HiddenInput,
         queryset=Book.objects.all(),
