@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Profile</h1>
+            <p>{{ object.username }} ({{ object.email }})</p>
+        </div>
+    </div>
+{% endblock %}
