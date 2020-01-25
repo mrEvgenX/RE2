@@ -31,8 +31,8 @@ class Book(models.Model):
 class ShelvedBook(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    started = models.DateField()
-    finished = models.DateField()
+    started = models.DateField(null=True, blank=True)
+    finished = models.DateField(null=True, blank=True)
 
     class Meta:
         unique_together = ('book', 'user')

@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views.generic import ListView
+from booktracker.models import Book
 
-# Create your views here.
+
+class ListAllBooks(ListView):
+    model = Book

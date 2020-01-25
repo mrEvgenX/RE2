@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Registration</h1>
+            <p>Sign up to track your reading progress. More features are coming soon.</p>
+        </div>
+        <div class="col-sm-6">
+            <form method="POST">
+                {{ form | crispy }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
