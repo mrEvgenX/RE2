@@ -31,6 +31,12 @@ class Book(models.Model):
         return self.shelvedbook_set.filter(user__id=user.id).first()
 
 
+class Shelf(models.Model):
+    name = models.CharField(max_length=140)
+
+    DEFAULT_SHELF_ID = 1
+
+
 class ShelvedBookManager(models.Manager):
 
     def shelved_by_user(self, user):
@@ -60,7 +66,8 @@ class ShelvedBook(models.Model):
 
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=STATUSES, default=WANT_TO_READ)
+    shelf = models.ForeignKey(to=Shelf, on_delete=models.CASCADE, default=Shelf.DEFAULT_SHELF_ID)
+    status = models.IntegerField(choices=STATUSES, default=WANT_TO_READ)  # TODO remove, give all functions to "shelf"
     started = models.DateField(null=True, blank=True)
     finished = models.DateField(null=True, blank=True)
 
