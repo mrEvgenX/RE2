@@ -71,6 +71,9 @@ class MyShelf(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx.update({
+            'books_want_to_read': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.WANT_TO_READ),
+            'books_currently_reading': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.CURRENTLY_READING),
+            'books_read': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.READ, 10),
             'want_to_read_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.WANT_TO_READ),
             'currently_reading_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.CURRENTLY_READING),
             'read_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.READ)

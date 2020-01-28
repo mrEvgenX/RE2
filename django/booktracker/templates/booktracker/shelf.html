@@ -13,13 +13,31 @@
         </div>
         <div class="col-sm-10">
             <h1>Your shelf</h1>
+            <h3>Currently reading</h3>
             <ul>
-                {% for book_ref in object_list %}
+                {% for book_ref in books_currently_reading %}
                     <li><a href="{% url 'booktracker:book_detail' pk=book_ref.book.id %}">{{ book_ref.book }}</a></li>
                 {% empty %}
                     <li>No books yet.</li>
                 {% endfor %}
             </ul>
+            <h3>Want to read</h3>
+            <ul>
+                {% for book_ref in books_want_to_read %}
+                    <li><a href="{% url 'booktracker:book_detail' pk=book_ref.book.id %}">{{ book_ref.book }}</a></li>
+                {% empty %}
+                    <li>No books yet.</li>
+                {% endfor %}
+            </ul>
+            <h3>Read</h3>
+            <ul>
+                {% for book_ref in books_read %}
+                    <li><a href="{% url 'booktracker:book_detail' pk=book_ref.book.id %}">{{ book_ref.book }}</a></li>
+                {% empty %}
+                    <li>No books yet.</li>
+                {% endfor %}
+            </ul>
+
         </div>
     </div>
 {% endblock %}

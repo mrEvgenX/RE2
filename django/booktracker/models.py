@@ -38,10 +38,14 @@ class ShelvedBookManager(models.Manager):
         qs = qs.filter(user=user)
         return qs
 
-    def counter_by_status_by_user(self, user, status):
+    def get_by_status_by_user(self, user, status, limit=None):
         qs = self.get_queryset()
-        return qs.filter(user=user, status=status).count()
+        if not limit:
+            return qs.filter(user=user, status=status)
+        return qs.filter(user=user, status=status)[:limit]
 
+    def counter_by_status_by_user(self, user, status):
+        return self.get_by_status_by_user(user, status).count()
 
 
 class ShelvedBook(models.Model):
