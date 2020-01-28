@@ -18,3 +18,10 @@ class ShelvingForm(forms.ModelForm):
     class Meta:
         model = ShelvedBook
         fields = ['book', 'user']
+
+
+class ChangeStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = ShelvedBook
+        fields =['status']

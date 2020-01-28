@@ -28,14 +28,39 @@ class Book(models.Model):
         return '{} "{}"'.format(self.author, self.title)
 
     def shelved_by_user(self, user):
-        return self.shelvedbook_set.filter(user__id=user.id).exists()
+        return self.shelvedbook_set.filter(user__id=user.id).first()
+
+
+class ShelvedBookManager(models.Manager):
+
+    def shelved_by_user(self, user):
+        qs = self.get_queryset()
+        qs = qs.filter(user=user)
+        return qs
+
+    def counter_by_status_by_user(self, user, status):
+        qs = self.get_queryset()
+        return qs.filter(user=user, status=status).count()
+
 
 
 class ShelvedBook(models.Model):
+    WANT_TO_READ = 0
+    CURRENTLY_READING = 1
+    READ = 2
+    STATUSES = (
+        (WANT_TO_READ, 'Want to read'),
+        (CURRENTLY_READING, 'Currently reading'),
+        (READ, 'Read'),
+    )
+
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status = models.IntegerField(choices=STATUSES, default=WANT_TO_READ)
     started = models.DateField(null=True, blank=True)
     finished = models.DateField(null=True, blank=True)
+
+    objects = ShelvedBookManager()
 
     class Meta:
         unique_together = ('book', 'user')
