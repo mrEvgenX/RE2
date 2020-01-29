@@ -61,6 +61,7 @@ class DeshelveView(LoginRequiredMixin, DeleteView):
         return get_object_or_404(b.shelvedbook_set, user__id=self.request.user.id)
 
 
+# TODO это больше похоже на DetailView, попробовать
 class MyShelf(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'booktracker/shelf.html'

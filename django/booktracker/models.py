@@ -31,6 +31,7 @@ class Book(models.Model):
         return self.shelvedbook_set.filter(user__id=user.id).first()
 
 
+# TODO сделать связь книги не с юзером, а с полкой
 class Shelf(models.Model):
     name = models.CharField(max_length=140)
 

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'user',
     'booktracker',
+    'thoughtkeeper',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -133,3 +134,5 @@ LOGIN_REDIRECT_URL = 'booktracker:shelf'
 LOGOUT_REDIRECT_URL = 'user:login'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+THOUGHTKEEPER_ENTITY_MODEL = 'booktracker.Book'
