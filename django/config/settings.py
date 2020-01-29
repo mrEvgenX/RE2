@@ -136,3 +136,4 @@ LOGOUT_REDIRECT_URL = 'user:login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 THOUGHTKEEPER_ENTITY_MODEL = 'booktracker.Book'
+THOUGHTKEEPER_COMMIT_INTENTION_REDIRECT = 'booktracker:book_detail'

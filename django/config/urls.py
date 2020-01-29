@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 import user.urls
 import booktracker.urls
+import thoughtkeeper.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include(user.urls, namespace='user')),
     path('', include(booktracker.urls, namespace='booktracker')),
+    path('', include(thoughtkeeper.urls, namespace='thoughtkeeper')),
 ]
