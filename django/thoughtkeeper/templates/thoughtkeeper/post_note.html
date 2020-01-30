@@ -2,13 +2,13 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Commit intention{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <div class="row">
         <div class="col-sm-12">
-            <h2>Commit intention</h2>
-            <p>Write your expectations about the book.</p>
+            <h2>{{ title }}</h2>
+            <p>{{ description }}</p>
             <form method="post">
                 {{ form | crispy }}
                 {% csrf_token %}
