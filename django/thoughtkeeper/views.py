@@ -1,8 +1,9 @@
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 import thoughtkeeper.forms
+import thoughtkeeper.models
 
 
 class PostNoteView(CreateView):
@@ -47,3 +48,23 @@ class LeaveFeedbackView(LoginRequiredMixin, PostNoteView):
     form_class = thoughtkeeper.forms.LeaveFeedbackForm
     page_title = 'Leave feedback'
     page_description = 'What do you think about it?'
+
+
+class DeleteNoteView(DeleteView):
+    template_name = 'thoughtkeeper/note_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse(settings.THOUGHTKEEPER_COMMIT_INTENTION_REDIRECT,
+                       kwargs={'pk': self.object.entity.id})
+
+
+class DropIntentionView(LoginRequiredMixin, DeleteNoteView):
+    model = thoughtkeeper.models.IntentionNote
+
+
+class RemoveMarginNoteView(LoginRequiredMixin, DeleteNoteView):
+    model = thoughtkeeper.models.MarginNote
+
+
+class RemoveFeedbackView(LoginRequiredMixin, DeleteNoteView):
+    model = thoughtkeeper.models.Feedback

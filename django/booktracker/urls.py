@@ -11,7 +11,15 @@ urlpatterns = [
     path('books/<int:pk>/deshelve', booktracker.views.DeshelveView.as_view(), name='deshelve'),
     path('shelf/', booktracker.views.MyShelf.as_view(), name='shelf'),
     path('books/<int:pk>/change_status', booktracker.views.ChangeStatusView.as_view(), name='change_status'),
+
     path('books/<int:pk>/commit_intention', thoughtkeeper.views.CommitIntentionView.as_view(), name='commit_intention'),
     path('books/<int:pk>/leave_marginnote', thoughtkeeper.views.LeaveMarginNoteView.as_view(), name='leave_marginnote'),
     path('books/<int:pk>/leave_feedback', thoughtkeeper.views.LeaveFeedbackView.as_view(), name='leave_feedback'),
+
+    path('books/<int:entity_id>/drop_intention/<int:pk>', thoughtkeeper.views.DropIntentionView.as_view(),
+         name='drop_intention'),
+    path('books/<int:entity_id>/remove_marginnote/<int:pk>', thoughtkeeper.views.RemoveMarginNoteView.as_view(),
+         name='remove_marginnote'),
+    path('books/<int:entity_id>/remove_feedback/<int:pk>', thoughtkeeper.views.RemoveFeedbackView.as_view(),
+         name='remove_feedback'),
 ]

@@ -30,6 +30,15 @@ class Book(models.Model):
     def shelved_by_user(self, user):
         return self.shelvedbook_set.filter(user__id=user.id).first()
 
+    def marginnotes_of_user(self, user):
+        return self.marginnote_set.filter(author__id=user.id).all()
+
+    def intentionnote_of_user(self, user):
+        return self.intentionnote_set.filter(author__id=user.id).first()
+
+    def feedback_of_user(self, user):
+        return self.feedback_set.filter(author__id=user.id).first()
+
 
 # TODO сделать связь книги не с юзером, а с полкой
 class Shelf(models.Model):

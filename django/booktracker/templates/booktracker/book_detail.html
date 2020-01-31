@@ -6,16 +6,14 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-9">
             <h2>{{ object.title }}</h2>
             {% if change_status_form %}
-            <p>Status: {{ reading_status }}
             <form method="POST" action="{% url 'booktracker:change_status' pk=object.id %}">
                 {{ change_status_form | crispy }}
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-sm">Apply</button>
+                <button type="submit" class="btn btn-secondary btn-sm">Change</button>
             </form>
-            </p>
             {% endif %}
             <p>Author: {{ object.author }}</p>
             <p>Publisher: {{ object.publisher }}</p>
@@ -29,12 +27,56 @@
                 <button type="submit" class="btn btn-primary">Add to shelf</button>
             </form>
             {% elif remove_form %}
+                {% if intention_note %}
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title">Intention</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ intention_note.date }}</p>
+                        <p class="card-text">{{ intention_note.body }}</p>
+                    </div>
+                    <a href="{% url 'booktracker:drop_intention' entity_id=object.id pk=intention_note.id %}" class="btn btn-link">Remove</a>
+                </div>
+                {% else %}
+                    <a href="{% url 'booktracker:commit_intention' pk=object.id %}" class="btn btn-light">Commit your intention</a>
+                {% endif %}
+                {% if feedback_note %}
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title">Feedback</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ feedback_note.date }}</p>
+                        <p class="card-text">Rating: {{ feedback_note.rating }}</p>
+                        <p class="card-text">{{ feedback_note.body }}</p>
+                    </div>
+                    <a href="{% url 'booktracker:remove_feedback' entity_id=object.id pk=feedback_note.id %}" class="btn btn-link">Remove</a>
+                </div>
+                {% else %}
+                    <a href="{% url 'booktracker:leave_feedback' pk=object.id %}" class="btn btn-light">Leave feedback</a>
+                {% endif %}
             <form method="POST" action="{% url 'booktracker:deshelve' pk=object.id %}">
                 {{ remove_form | crispy }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Remove from shelf</button>
             </form>
             {% endif %}
+        </div>
+        <div class="col-sm-3">
+            <h3>Margin notes</h3>
+            {% for note in margin_notes %}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">{{ note.date }}</p>
+                        <p class="card-text">{{ note.body }}</p>
+                    </div>
+                    <a href="{% url 'booktracker:remove_marginnote' entity_id=object.id pk=note.id %}" class="btn btn-link">Remove</a>
+                </div>
+            {% empty %}
+                <p>No notes yet...</p>
+            {% endfor %}
+            <a href="{% url 'booktracker:leave_marginnote' pk=object.id %}" class="btn btn-secondary">Jot down</a>
         </div>
     </div>
 {% endblock %}

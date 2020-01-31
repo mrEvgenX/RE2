@@ -21,10 +21,19 @@ class BookDetail(DetailView):
             form  = ShelvingForm(initial={'book': self.object.id, 'user': self.request.user.id})
             shelved_book = self.object.shelved_by_user(self.request.user)
             if not shelved_book:
-                ctx.update({'add_form': form})
+                ctx.update({
+                    'add_form': form,
+                    'margin_notes': [],
+                })
             else:
                 change_status_form = ChangeStatusForm(initial={'status': shelved_book.status})
-                ctx.update({'remove_form': form, 'reading_status': shelved_book.get_status_display(), 'change_status_form': change_status_form})
+                ctx.update({
+                    'remove_form': form,
+                    'change_status_form': change_status_form,
+                    'margin_notes': self.object.marginnotes_of_user(self.request.user),
+                    'intention_note': self.object.intentionnote_of_user(self.request.user),
+                    'feedback_note': self.object.feedback_of_user(self.request.user),
+                })
         return ctx
 
 

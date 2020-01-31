@@ -15,12 +15,18 @@ class Note(models.Model):
 class IntentionNote(Note):
     is_private = models.BooleanField(default=False)
 
+    def user_can_see(self, user):
+        return user == self.author or not self.is_private
+
     class Meta:
         unique_together = ('author', 'entity')
 
 
 class MarginNote(Note):
     is_private = models.BooleanField(default=False)
+
+    def user_can_see(self, user):
+        return user == self.author or not self.is_private
 
 
 class Feedback(Note):
