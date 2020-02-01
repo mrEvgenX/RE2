@@ -20,6 +20,11 @@ class ShelfManager(models.Manager):
         qs = qs.filter(owner=user).annotate(num_books=models.Count('book'))
         return qs
 
+    def get_default_shelf_for_user(self, user):
+        qs = self.get_queryset()
+        obj = qs.filter(owner=user, default=True).first()
+        return obj
+
 
 class Shelf(models.Model):
     name = models.CharField(max_length=140)

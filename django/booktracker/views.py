@@ -45,11 +45,12 @@ class ShelveView(LoginRequiredMixin, CreateView):
     def get_initial(self):
         return {
             'book': self.get_book().id,
-            'user': self.request.user.id,
+            'shelf': Shelf.objects.get_default_shelf_for_user(self.request.user),
         }
 
     def form_valid(self, form):
-        self.request.user.book_set.add(self.get_book())
+        shelf = Shelf.objects.get_default_shelf_for_user(self.request.user)
+        shelf.book_set.add(self.get_book())
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -68,7 +69,7 @@ class DeshelveView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         b = get_object_or_404(Book, pk=self.kwargs['pk'])
-        return get_object_or_404(b.shelvedbook_set, user__id=self.request.user.id)
+        return get_object_or_404(b.shelvedbook_set, shelf__owner=self.request.user)
 
 
 class MyShelf(LoginRequiredMixin, ListView):

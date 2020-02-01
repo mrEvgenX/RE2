@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model
-from booktracker.models import ShelvedBook, Book
+from booktracker.models import ShelvedBook, Book, Shelf
 
 
 class ShelvingForm(forms.ModelForm):
@@ -9,15 +8,15 @@ class ShelvingForm(forms.ModelForm):
         queryset=Book.objects.all(),
         disabled=True,
     )
-    user = forms.ModelChoiceField(
+    shelf = forms.ModelChoiceField(
         widget=forms.HiddenInput,
-        queryset=get_user_model().objects.all(),
+        queryset=Shelf.objects.all(),
         disabled=True,
     )
 
     class Meta:
         model = ShelvedBook
-        fields = ['book', 'user']
+        fields = ['book', 'shelf']
 
 
 class MoveToShelfForm(forms.ModelForm):
