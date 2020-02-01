@@ -20,8 +20,8 @@ class ShelvingForm(forms.ModelForm):
         fields = ['book', 'user']
 
 
-class ChangeStatusForm(forms.ModelForm):
+class MoveToShelfForm(forms.ModelForm):
 
     class Meta:
         model = ShelvedBook
-        fields =['status']
+        fields =['shelf']

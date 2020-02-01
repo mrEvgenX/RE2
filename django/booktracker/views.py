@@ -4,8 +4,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-from booktracker.models import Book, ShelvedBook
-from booktracker.forms import ShelvingForm, ChangeStatusForm
+from booktracker.models import Book, Shelf, ShelvedBook
+from booktracker.forms import ShelvingForm, MoveToShelfForm
 
 
 class ListAllBooks(ListView):
@@ -18,7 +18,7 @@ class BookDetail(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            form  = ShelvingForm(initial={'book': self.object.id, 'user': self.request.user.id})
+            form = ShelvingForm(initial={'book': self.object.id, 'user': self.request.user.id})
             shelved_book = self.object.shelved_by_user(self.request.user)
             if not shelved_book:
                 ctx.update({
@@ -26,10 +26,10 @@ class BookDetail(DetailView):
                     'margin_notes': [],
                 })
             else:
-                change_status_form = ChangeStatusForm(initial={'status': shelved_book.status})
+                move_to_shelf_form = MoveToShelfForm(initial={'shelf': shelved_book.shelf})
                 ctx.update({
                     'remove_form': form,
-                    'change_status_form': change_status_form,
+                    'move_to_shelf_form': move_to_shelf_form,
                     'margin_notes': self.object.marginnotes_of_user(self.request.user),
                     'intention_note': self.object.intentionnote_of_user(self.request.user),
                     'feedback_note': self.object.feedback_of_user(self.request.user),
@@ -70,29 +70,22 @@ class DeshelveView(LoginRequiredMixin, DeleteView):
         return get_object_or_404(b.shelvedbook_set, user__id=self.request.user.id)
 
 
-# TODO это больше похоже на DetailView, попробовать
 class MyShelf(LoginRequiredMixin, ListView):
-    model = Book
     template_name = 'booktracker/shelf.html'
 
     def get_queryset(self):
-        return ShelvedBook.objects.shelved_by_user(self.request.user)
+        return Shelf.objects.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx.update({
-            'books_want_to_read': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.WANT_TO_READ),
-            'books_currently_reading': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.CURRENTLY_READING),
-            'books_read': ShelvedBook.objects.get_by_status_by_user(self.request.user, ShelvedBook.READ, 10),
-            'want_to_read_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.WANT_TO_READ),
-            'currently_reading_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.CURRENTLY_READING),
-            'read_counter': ShelvedBook.objects.counter_by_status_by_user(self.request.user, ShelvedBook.READ)
+            'book_counters': Shelf.objects.get_summary(self.request.user),
         })
         return ctx
 
 
-class ChangeStatusView(LoginRequiredMixin, UpdateView):
-    form_class = ChangeStatusForm
+class MoveToShelfView(LoginRequiredMixin, UpdateView):
+    form_class = MoveToShelfForm
 
     def get_queryset(self):
         return ShelvedBook.objects.shelved_by_user(self.request.user)
@@ -102,7 +95,4 @@ class ChangeStatusView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         b = get_object_or_404(Book, pk=self.kwargs['pk'])
-        return get_object_or_404(b.shelvedbook_set, user__id=self.request.user.id)
-
-    # def form_invalid(self, form):
-    #     return HttpResponseRedirect(redirect_to=self.object.question.get_absolute_url())
+        return get_object_or_404(b.shelvedbook_set, shelf__owner=self.request.user)

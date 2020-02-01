@@ -8,14 +8,15 @@
     <div class="row">
         <div class="col-sm-9">
             <h2>{{ object.title }}</h2>
-            {% if change_status_form %}
-            <form method="POST" action="{% url 'booktracker:change_status' pk=object.id %}">
-                {{ change_status_form | crispy }}
+            {% if move_to_shelf_form %}
+            <form method="POST" action="{% url 'booktracker:move_to_shelf' pk=object.id %}">
+                {{ move_to_shelf_form | crispy }}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary btn-sm">Change</button>
             </form>
             {% endif %}
             <p>Author: {{ object.author }}</p>
+            <p>Shelved book: {{ shelved_book }}</p>
             <p>Publisher: {{ object.publisher }}</p>
             <p>Year: {{ object.year }}</p>
             <h3>Description</h3>
