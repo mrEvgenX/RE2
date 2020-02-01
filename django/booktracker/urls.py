@@ -14,7 +14,10 @@ urlpatterns = [
     path('books/<int:pk>/leave_marginnote', thoughtkeeper.views.LeaveMarginNoteView.as_view(), name='leave_marginnote'),
     path('books/<int:pk>/leave_feedback', thoughtkeeper.views.LeaveFeedbackView.as_view(), name='leave_feedback'),
 
+    #path('profile', booktracker.views.MyShelf.as_view(), name='profile'),
+    #path('profile/edit', booktracker.views.MyShelf.as_view(), name='profile'),
     path('profile/<slug:username>', booktracker.views.MyShelf.as_view(), name='profile'),
+    #path('profile/<slug:username>/shelf_content/<int:pk>', booktracker.views.MyShelf.as_view(), name='profile'),
 
     path('books/<int:entity_id>/drop_intention/<int:pk>', thoughtkeeper.views.DropIntentionView.as_view(),
          name='drop_intention'),
