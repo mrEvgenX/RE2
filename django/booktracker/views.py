@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from booktracker.models import Book, Shelf, ShelvedBook
@@ -71,15 +72,16 @@ class DeshelveView(LoginRequiredMixin, DeleteView):
 
 
 class MyShelf(LoginRequiredMixin, ListView):
-    template_name = 'booktracker/shelf.html'
+    template_name = 'booktracker/profile.html'
 
     def get_queryset(self):
-        return Shelf.objects.filter(owner=self.request.user)
+        return Shelf.objects.filter(owner__username = self.kwargs['username'])
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx.update({
             'book_counters': Shelf.objects.get_summary(self.request.user),
+            'shelf_owner': get_object_or_404(get_user_model(), username=self.kwargs['username'])
         })
         return ctx
 

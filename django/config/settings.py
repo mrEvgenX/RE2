@@ -130,7 +130,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = 'user:login'
-LOGIN_REDIRECT_URL = 'booktracker:shelf'
+LOGIN_REDIRECT_URL = 'booktracker:all_books'
 LOGOUT_REDIRECT_URL = 'user:login'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

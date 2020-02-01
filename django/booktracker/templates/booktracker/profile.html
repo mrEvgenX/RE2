@@ -5,6 +5,11 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-3">
+            <div>
+                <h1>User</h1>
+                <p>Username: {{ shelf_owner.username }}</p>
+                <p>Email: {{ shelf_owner.email }}</p>
+            </div>
             <ul>
                 {% for shelf in book_counters %}
                 <li>{{shelf.name}} ({{ shelf.num_books }})</li>
