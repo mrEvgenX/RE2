@@ -28,6 +28,7 @@ class BookDetail(DetailView):
                 })
             else:
                 move_to_shelf_form = MoveToShelfForm(initial={'shelf': shelved_book.shelf})
+                move_to_shelf_form.fields['shelf'].queryset = Shelf.objects.filter(owner=self.request.user)
                 ctx.update({
                     'remove_form': form,
                     'move_to_shelf_form': move_to_shelf_form,
@@ -89,9 +90,13 @@ class MyShelf(LoginRequiredMixin, ListView):
 
 class MoveToShelfView(LoginRequiredMixin, UpdateView):
     form_class = MoveToShelfForm
+    template_name = 'booktracker/move_to_shelf.html'
 
-    def get_queryset(self):
-        return ShelvedBook.objects.shelved_by_user(self.request.user)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['shelf'].choices = [(shelf.id, shelf.name + ' (hello world)') for shelf in Shelf.objects.filter(owner=self.request.user)]
+        #form.fields['shelf'].queryset = Shelf.objects.filter(owner=self.request.user)
+        return form
 
     def get_success_url(self):
         return reverse('booktracker:book_detail', kwargs={'pk': self.kwargs['pk']})
@@ -99,3 +104,5 @@ class MoveToShelfView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         b = get_object_or_404(Book, pk=self.kwargs['pk'])
         return get_object_or_404(b.shelvedbook_set, shelf__owner=self.request.user)
+
+    # TODO возможно, понадобится переопределить dispatch, чтобы запретить все, кроме POST

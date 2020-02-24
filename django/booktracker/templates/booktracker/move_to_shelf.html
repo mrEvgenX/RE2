@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}All books{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>{{ object.title }}</h2>
+            <p>Author: {{ object.author }}</p>
+
+            <form method="POST">
+                {{ form | crispy }}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-sm">Change</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

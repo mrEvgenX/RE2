@@ -21,6 +21,8 @@ class ShelvingForm(forms.ModelForm):
 
 class MoveToShelfForm(forms.ModelForm):
 
+
+
     class Meta:
         model = ShelvedBook
         fields =['shelf']
